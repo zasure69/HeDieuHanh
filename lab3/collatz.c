@@ -10,6 +10,10 @@
 #include <time.h>
 
 int main (int argc, char* argv[]) {
+    if (argc < 2) {
+    	printf("Usage: ./collatz <number>\n");
+    	return 1;
+    }
     int n = atoi(argv[1]);
     const int SIZE = 4096;
     /* name of the shared memory object */

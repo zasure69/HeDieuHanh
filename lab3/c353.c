@@ -1,9 +1,3 @@
-/*######################################
-# University of Information Technology #
-# IT007 Operating System #
-# Nguyễn Khắc Hậu, 22520410 #
-# File: c353.c #
-######################################*/
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>

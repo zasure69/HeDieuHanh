@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
         execl("/bin/sh", "sh", "-c", argv[1], NULL);
     } else {
         // Tiến trình cha
-        wait(0);
+        wait(NULL);
         gettimeofday(&end, NULL);  // Lấy mốc thời gian sau khi thực thi lệnh shell
         double execution_time = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1000000.0;
         printf("Execution time: %.6lf seconds\n", execution_time);

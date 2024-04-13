@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     struct timeval start, end;
 
     __pid_t pid = fork();
-    gettimeofday(&start, NULL);
+    gettimeofday(&start, NULL); // Lấy mốc thời gian trước khi thực thi lệnh shell
 
     if (pid == 0) {
         // Tiến trình con

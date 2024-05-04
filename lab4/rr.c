@@ -14,12 +14,18 @@ typedef struct{
 } PCB;
 
 void inputProcess(int n, PCB P[]) {
+    srand(time(NULL));
     for (int i = 0; i < n; i++) {
         P[i].iPID = i+1;
-        printf("Input Arrival Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iArrival);
-        printf("Input Burst Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iBurst);
+        //Nhận input ngẫu nhiên
+        P[i].iArrival = rand() % 20;
+        P[i].iBurst = rand() % 12 + 2;
+        printf("Arrival time P%d: %d\n", i + 1, P[i].iArrival);
+        printf("Burst time P%d: %d\n", i + 1, P[i].iBurst);
+        // printf("Input Arrival Time P%d: ", P[i].iPID);
+        // scanf("%d", &P[i].iArrival);
+        // printf("Input Burst Time P%d: ", P[i].iPID);
+        // scanf("%d", &P[i].iBurst);
     }
 }
 void printProcess(int n, PCB P[]) {
@@ -272,10 +278,10 @@ int main()
         Input[i].iFinish = 0;
     }
     quickSort(Input, 0, iNumberOfProcess - 1, SORT_BY_ARRIVAL);
-    sortSJFFirstTime(iNumberOfProcess, Input);
+    //sortSJFFirstTime(iNumberOfProcess, Input);
     pushProcess(&iReady, ReadyQueue, Input[0]);
     removeProcess(&iRemain, 0, Input);
-    ReadyQueue[0].remainTime = ReadyQueue[0].iBurst;
+    //ReadyQueue[0].remainTime = ReadyQueue[0].iBurst;
     ReadyQueue[0].iStart = ReadyQueue[0].iArrival;
     //ReadyQueue[0].iFinish = ReadyQueue[0].iStart + ReadyQueue[0].iBurst;
     ReadyQueue[0].iResponse = ReadyQueue[0].iStart - ReadyQueue[0].iArrival;
@@ -335,7 +341,7 @@ int main()
         time++;
         cnt++;
         Running[iRunning-1].remainTime--;
-        if (Running[iRunning-1].remainTime == 0 && cnt < quantumTime) {
+        if (Running[iRunning-1].remainTime == 0 && (cnt < quantumTime || cnt == quantumTime)) {
             cnt = 0;
             Running[iRunning-1].iFinish = time;
             Running[iRunning-1].iTaT = time - Running[iRunning-1].iArrival;
@@ -349,22 +355,7 @@ int main()
                 pushProcess(&iRunning, Running, ReadyQueue[0]);
                 removeProcess(&iReady, 0, ReadyQueue);
             }
-        } else if (Running[iRunning-1].remainTime == 0 && cnt == quantumTime) {
-            cnt = 0;
-            Running[iRunning-1].iFinish = time;
-            Running[iRunning-1].iTaT = time - Running[iRunning-1].iArrival;
-            Running[iRunning-1].iWaiting = Running[iRunning-1].iTaT - Running[iRunning-1].iBurst;
-            pushProcess(&iTerminated, TerminatedArray, Running[iRunning-1]);
-            if (iReady > 0) {
-                if (ReadyQueue[0].iStart == -1) {
-                    ReadyQueue[0].iStart = time;
-                }
-                ReadyQueue[0].iResponse = ReadyQueue[0].iStart - ReadyQueue[0].iArrival;
-                pushProcess(&iRunning, Running, ReadyQueue[0]);
-                removeProcess(&iReady, 0, ReadyQueue);
-            }
-        }
-        else if (cnt == quantumTime) {
+        } else if (cnt == quantumTime) {
             
             cnt = 0;
             Running[iRunning-1].iFinish = time;
@@ -381,7 +372,6 @@ int main()
     }
 
     printf("\n===== RR Scheduling =====\n");
-    printProcess(iRunning, Running);
     exportGanttChart(iRunning, Running);
     quickSort(TerminatedArray, 0, iTerminated - 1, SORT_BY_PID);
     calculateAWT(iTerminated, TerminatedArray);

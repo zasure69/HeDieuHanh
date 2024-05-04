@@ -14,12 +14,18 @@ typedef struct{
 } PCB;
 
 void inputProcess(int n, PCB P[]) {
+    srand(time(NULL));
     for (int i = 0; i < n; i++) {
         P[i].iPID = i+1;
-        printf("Input Arrival Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iArrival);
-        printf("Input Burst Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iBurst);
+        //Nhập Input ngẫu nhiên
+        P[i].iArrival = rand() % 20;
+        P[i].iBurst = rand() % 12 + 2;
+        printf("Arrival time P%d: %d\n", i + 1, P[i].iArrival);
+        printf("Burst time P%d: %d\n", i + 1, P[i].iBurst);
+        // printf("Input Arrival Time P%d: ", P[i].iPID);
+        // scanf("%d", &P[i].iArrival);
+        // printf("Input Burst Time P%d: ", P[i].iPID);
+        // scanf("%d", &P[i].iBurst);
     }
 }
 void printProcess(int n, PCB P[]) {
@@ -316,6 +322,20 @@ int main()
                 }
                 Running[iRunning - 1].iStart = time;
                 Running[iRunning - 1].iResponse = Running[iRunning-1].iStart - Running[iRunning-1].iArrival;
+            } else if (Running[iRunning - 1].remainTime == 0) {
+                Running[iRunning-1].iFinish = time;
+                Running[iRunning-1].iTaT = time - Running[iRunning-1].iArrival;
+                Running[iRunning-1].iWaiting = Running[iRunning-1].iTaT - Running[iRunning-1].iBurst;
+                pushProcess(&iTerminated, TerminatedArray, Running[iRunning-1]);
+                if (iReady > 0) {
+                    quickSort(ReadyQueue, 0, iReady - 1, SORT_BY_REMAINTIME);
+                    if (ReadyQueue[0].iStart == -1) {
+                        ReadyQueue[0].iStart = time;
+                    }
+                    ReadyQueue[0].iResponse = ReadyQueue[0].iStart - ReadyQueue[0].iArrival;
+                    pushProcess(&iRunning, Running, ReadyQueue[0]);
+                    removeProcess(&iReady, 0, ReadyQueue);
+                }
             } else if (Input[i].iArrival == time) {
                 pushProcess(&iReady, ReadyQueue, Input[i]);
                 removeProcess(&iRemain, i, Input);
@@ -343,8 +363,7 @@ int main()
         }
     }
 
-    printf("\n===== SJF Scheduling =====\n");
-    printProcess(iRunning, Running);
+    printf("\n===== SRTF Scheduling =====\n");
     exportGanttChart(iRunning, Running);
     quickSort(TerminatedArray, 0, iTerminated - 1, SORT_BY_PID);
     calculateAWT(iTerminated, TerminatedArray);

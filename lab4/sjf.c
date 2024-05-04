@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #define SORT_BY_ARRIVAL 0
 #define SORT_BY_PID 1
 #define SORT_BY_BURST 2
@@ -11,12 +12,18 @@ typedef struct{
 } PCB;
 
 void inputProcess(int n, PCB P[]) {
+    srand(time(NULL));
     for (int i = 0; i < n; i++) {
-        P[i].iPID = i+1;
-        printf("Input Arrival Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iArrival);
-        printf("Input Burst Time P%d: ", P[i].iPID);
-        scanf("%d", &P[i].iBurst);
+        P[i].iPID = i + 1;
+        //Nhập input ngẫu nhiên
+        P[i].iArrival = rand() % 20;
+        P[i].iBurst = rand() % 12 + 2;
+        printf("Arrival time P%d: %d\n", i + 1, P[i].iArrival);
+        printf("Burst time P%d: %d\n", i + 1, P[i].iBurst);
+        // printf("Input Arrival time P%d: ", i + 1);
+        // scanf("%d", &P[i].iArrival);
+        // printf("Input Burst time P%d: ", i + 1);
+        // scanf("%d", &P[i].iBurst);
     }
 }
 void printProcess(int n, PCB P[]) {
@@ -255,7 +262,6 @@ int main()
     PCB ReadyQueue[10];
     PCB TerminatedArray[10];
     int iNumberOfProcess;
-
     printf("Please input number of Process: ");
     scanf("%d", &iNumberOfProcess);
 

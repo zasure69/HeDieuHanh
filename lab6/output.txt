@@ -1,0 +1,5 @@
+total 36
+-rw-r--r-- 1 zasure69 zasure69     0 Jun 16 16:24 output.txt
+-rwxrwxr-x 1 zasure69 zasure69 17952 Jun 16 16:08 shell
+-rw-rw-r-- 1 zasure69 zasure69  8360 Jun 16 16:08 shell.c
+-rw-rw-r-- 1 zasure69 zasure69    18 Jun 16 14:57 sort.txt
